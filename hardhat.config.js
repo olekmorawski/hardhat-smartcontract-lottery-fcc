@@ -6,6 +6,7 @@ require("hardhat-gas-reporter")
 require("hardhat-contract-sizer")
 require("dotenv").config()
 
+
 const RINKEBY_RPC = process.env.RINKEBY_RPC
 const PRIVATE_KEY = process.env.PRIVATE_KEY
 const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY
@@ -24,6 +25,12 @@ module.exports = {
             url: RINKEBY_RPC,
             accounts: [PRIVATE_KEY],
         },
+    },
+    gasReporter: {
+        enabled: false,
+        currency: "USD",
+        outputFile: "gas-report.txt",
+        noColors: true,
     },
     solidity: "0.8.9",
     namedAccounts: {
