@@ -1,5 +1,6 @@
-const { network, getNamedAccounts, ethers } = require("hardhat")
-const { developmentChains, networkConfig, verify } = require("../helper-hardhat-config")
+const { network, ethers } = require("hardhat")
+const { developmentChains, networkConfig } = require("../helper-hardhat-config")
+const { verify } = require("../utils/verify")
 
 const VRF_SUB_AMOUNT = ethers.utils.parseEther("2")
 
@@ -28,11 +29,11 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
 
     const args = [
         vrfCoordinatorV2Address,
-        subscriptionId,
-        gasLane,
-        interval,
         entranceFee,
+        gasLane,
+        subscriptionId,
         callbackGaslimit,
+        interval
     ]
     const raffle = await deploy("Lottery", {
         from: deployer,
