@@ -5,12 +5,13 @@ import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
 
-error Lottery__NotEnoughETHEntered();
+error Raffle__NotEnoughETHEntered();
 error Raffle__TransferFailed();
 error Raffle__NotOpen();
 error Raffle__UpkeepNotNeeded(uint256 currentBalance, uint256 numPlayers, uint256 raffleState);
 
-contract Lottery is VRFConsumerBaseV2, KeeperCompatibleInterface {
+contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
+    
     enum RaffleState {
         OPEN,
         CALCULATING
@@ -30,7 +31,7 @@ contract Lottery is VRFConsumerBaseV2, KeeperCompatibleInterface {
     uint256 private s_lastTimesStamp;
     uint256 private immutable i_interval;
 
-    event LotteryEnter(address indexed player);
+    event RaffleEnter(address indexed player);
     event RequestedRaffleWinner(uint256 indexed requestId);
     event winnerPicked(address indexed winner);
 
@@ -56,15 +57,15 @@ contract Lottery is VRFConsumerBaseV2, KeeperCompatibleInterface {
         return i_entranceFee;
     }
 
-    function enterLottery() public payable {
+    function enterRaffle() public payable {
         if (msg.value < i_entranceFee) {
-            revert Lottery__NotEnoughETHEntered();
+            revert Raffle__NotEnoughETHEntered();
         }
         if (s_raffleState != RaffleState.OPEN) {
             revert Raffle__NotOpen();
         }
         s_players.push(payable(msg.sender));
-        emit LotteryEnter(msg.sender);
+        emit RaffleEnter(msg.sender);
     }
 
     // This is
@@ -152,5 +153,9 @@ contract Lottery is VRFConsumerBaseV2, KeeperCompatibleInterface {
 
     function getRequesConfirmations() public pure returns (uint256) {
         return REQUEST_CONFIRMATIONS;
+    }
+
+    function getInterval() public view returns (uint256) {
+        return i_interval;
     }
 }

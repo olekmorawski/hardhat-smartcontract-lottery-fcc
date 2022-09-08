@@ -1,4 +1,4 @@
-const { network, ethers } = require("hardhat")
+const { network, ethers, getNamedAccounts } = require("hardhat")
 const { developmentChains } = require("../helper-hardhat-config")
 
 const BASE_FEE = ethers.utils.parseEther("0.25")

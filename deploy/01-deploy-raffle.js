@@ -1,4 +1,4 @@
-const { network, ethers } = require("hardhat")
+const { network, ethers, getNamedAccounts } = require("hardhat")
 const { developmentChains, networkConfig } = require("../helper-hardhat-config")
 const { verify } = require("../utils/verify")
 
@@ -33,9 +33,9 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
         gasLane,
         subscriptionId,
         callbackGaslimit,
-        interval
+        interval,
     ]
-    const raffle = await deploy("Lottery", {
+    const raffle = await deploy("Raffle", {
         from: deployer,
         args: args,
         log: true,
