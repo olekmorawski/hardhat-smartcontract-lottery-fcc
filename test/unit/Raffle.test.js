@@ -1,5 +1,5 @@
 const { getNamedAccounts, deployments, ethers, network } = require("hardhat")
-const { developmentChains, networkConfig } = require("../../../helper-hardhat-config")
+const { developmentChains, networkConfig } = require("../../helper-hardhat-config")
 const { assert, expect } = require("chai")
 
 !developmentChains.includes(network.name)
@@ -124,12 +124,12 @@ const { assert, expect } = require("chai")
                   ).to.be.revertedWith("nonexistent request")
               })
               it("picks a winner, resets the lottery and sends money", async function () {
-                  const additionalEntrants = 3
-                  const startingAccountIndex = 1
+                  const additionalEntrances = 3
+                  const startingAccountIndex = 2
                   const accounts = await ethers.getSigners()
                   for (
                       let i = startingAccountIndex;
-                      i < startingAccountIndex + additionalEntrants;
+                      i < startingAccountIndex + additionalEntrances;
                       i++
                   ) {
                       const accountConnectedRaffle = raffle.connect(accounts[i])
@@ -138,23 +138,23 @@ const { assert, expect } = require("chai")
                   const startingTimestamp = await raffle.getLatestTimestamp()
 
                   await new Promise(async (resolve, reject) => {
-                      raffle.once("WinnerPicked", async  () => {
+                      raffle.once("WinnerPicked", async () => {
                           console.log("Found the event!")
                           try {
                               const recentWinner = await raffle.getRecentWinner()
                               const raffleState = await raffle.getRaffleState()
                               const endingTimestamp = await raffle.getLastTimestamp()
-                              const numPlayer = await raffle.getNumberOfPlayers()
-                              const winnerEndingBalance = await accounts[1].getBalance()
-                              assert.equal(numPlayer.toString(), "0")
-                              assert.equal(raffleState.toString(), "0")
+                              const winnerEndingBalance = await accounts[2].getBalance()
+
+                              assert.equal(recentWinner.toString(), accounts[2].address)
+                              assert.equal(raffleState, "0")
                               assert(endingTimestamp > startingTimestamp)
 
                               assert.equal(
                                   winnerEndingBalance.toString(),
                                   winnerStartingBalance.add(
                                       raffleEntranceFee
-                                          .mul(additionalEntrants)
+                                          .mul(additionalEntrances)
                                           .add(raffleEntranceFee)
                                           .toString()
                                   )
