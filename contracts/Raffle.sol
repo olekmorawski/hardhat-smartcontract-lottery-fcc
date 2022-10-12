@@ -11,7 +11,6 @@ error Raffle__NotOpen();
 error Raffle__UpkeepNotNeeded(uint256 currentBalance, uint256 numPlayers, uint256 raffleState);
 
 contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
-    
     enum RaffleState {
         OPEN,
         CALCULATING
@@ -33,7 +32,7 @@ contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
 
     event RaffleEnter(address indexed player);
     event RequestedRaffleWinner(uint256 indexed requestId);
-    event winnerPicked(address indexed winner);
+    event WinnerPicked(address indexed winner);
 
     constructor(
         address vrfCoordinatorV2,
@@ -124,7 +123,7 @@ contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
         if (!success) {
             revert Raffle__TransferFailed();
         }
-        emit winnerPicked(recentWinner);
+        emit WinnerPicked(recentWinner);
     }
 
     function getPlayer(uint256 index) public view returns (address) {
@@ -147,7 +146,7 @@ contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
         return s_players.length;
     }
 
-    function getLatestTimestamp() public view returns (uint256) {
+    function getLastTimestamp() public view returns (uint256) {
         return s_lastTimesStamp;
     }
 
