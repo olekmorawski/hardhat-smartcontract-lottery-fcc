@@ -132,8 +132,8 @@ const { assert, expect } = require("chai")
                       i < startingAccountIndex + additionalEntrances;
                       i++
                   ) {
-                      const accountConnectedRaffle = raffle.connect(accounts[i])
-                      await accountConnectedRaffle.enterRaffle({ value: raffleEntranceFee })
+                      raffle = raffle.connect(accounts[i])
+                      await raffle.enterRaffle({ value: raffleEntranceFee })
                   }
                   const startingTimestamp = await raffle.getLastTimestamp()
 
@@ -145,6 +145,7 @@ const { assert, expect } = require("chai")
                               const raffleState = await raffle.getRaffleState()
                               const endingTimestamp = await raffle.getLastTimestamp()
                               const winnerEndingBalance = await accounts[2].getBalance()
+                              await expect(raffle.getPlayer(0)).to.be.reverted
 
                               assert.equal(recentWinner.toString(), accounts[2].address)
                               assert.equal(raffleState, "0")
@@ -152,17 +153,19 @@ const { assert, expect } = require("chai")
 
                               assert.equal(
                                   winnerEndingBalance.toString(),
-                                  winnerStartingBalance.add(
-                                      raffleEntranceFee
-                                          .mul(additionalEntrances)
-                                          .add(raffleEntranceFee)
-                                          .toString()
-                                  )
+                                  winnerStartingBalance
+                                      .add(
+                                          raffleEntranceFee
+                                              .mul(additionalEntrances)
+                                              .add(raffleEntranceFee)
+                                      )
+                                      .toString()
                               )
+                              assert(endingTimestamp > startingTimestamp)
+                              resolve()
                           } catch (e) {
                               reject(e)
                           }
-                          resolve()
                       })
 
                       const tx = await raffle.performUpkeep([])
