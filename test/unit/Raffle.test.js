@@ -166,7 +166,7 @@ const { assert, expect } = require("chai")
                           }
                       })
 
-                      const tx = await raffle.performUpkeep([])
+                      const tx = await raffle.performUpkeep("0x")
                       const txReciept = await tx.wait(1)
                       const winnerStartingBalance = await accounts[1].getBalance()
                       await vrfCoordinatorV2Mock.fulfillRandomWords(
