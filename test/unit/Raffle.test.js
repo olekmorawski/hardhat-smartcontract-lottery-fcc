@@ -148,9 +148,7 @@ const { assert, expect } = require("chai")
                               await expect(raffle.getPlayer(0)).to.be.reverted
 
                               assert.equal(recentWinner.toString(), accounts[2].address)
-                              assert.equal(raffleState, "0")
-                              assert(endingTimestamp > startingTimestamp)
-
+                              assert.equal(raffleState, 0)
                               assert.equal(
                                   winnerEndingBalance.toString(),
                                   winnerStartingBalance
